@@ -1,5 +1,6 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -7,18 +8,36 @@ import java.util.regex.Pattern;
 
 public class Feedback {
     private String attempt;
-    List<Mark> mark;
+    List<Mark> marks;
+    List<String> hint;
 
     public Feedback(String attempt, List<Mark> mark) {
         this.attempt = attempt;
-        this.mark = mark;
+        this.marks = mark;
     }
 
     public boolean isWordGuessed(){
-        return !mark.contains(Mark.ABSENT) && !mark.contains(Mark.INVALID) && !mark.contains(Mark.PRESENT);
+        return !marks.contains(Mark.ABSENT) && !marks.contains(Mark.INVALID) && !marks.contains(Mark.PRESENT);
     }
     public boolean isWordValid(){
-        return !mark.contains(Mark.INVALID);
+        return !marks.contains(Mark.INVALID);
+    }
+
+    public List<String> giveHint(List<String> previousHint, String wordToGuess){
+        //Word to guess is "woord"
+        //previous guess was "baard"
+        //So feedback is List.of(Mark.ABSENT,Mark.ABSENT,Mark.ABSENT,Mark.CORRECT,Mark.CORRECT)
+        //previous hint was Arrays.asList("w",".",".",".",".")
+        //New hint should be Arrays.asList("w",".",".","r","d")
+        List<String> newHint = new ArrayList<>();
+        for(int i = 0; i < marks.size(); i++){
+            if(marks.get(i).equals(Mark.CORRECT) || previousHint.get(i).equals(String.valueOf(wordToGuess.charAt(i)))){
+                newHint.add(String.valueOf(wordToGuess.charAt(i)));
+            } else {
+               newHint.add(".");
+            }
+        }
+        return newHint;
     }
 
     @Override
@@ -26,19 +45,19 @@ public class Feedback {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Feedback feedback = (Feedback) o;
-        return Objects.equals(attempt, feedback.attempt) && Objects.equals(mark, feedback.mark);
+        return Objects.equals(attempt, feedback.attempt) && Objects.equals(marks, feedback.marks);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(attempt, mark);
+        return Objects.hash(attempt, marks);
     }
 
     @Override
     public String toString() {
         return "Feedback{" +
                 "attempt='" + attempt + '\'' +
-                ", mark=" + mark +
+                ", mark=" + marks +
                 '}';
     }
 
