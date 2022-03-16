@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import nl.hu.cisq1.lingo.trainer.domain.exception.TurnExeption;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -55,24 +56,31 @@ public class Round extends AbstractEntity {
     //if the letter is not in the same place, check if its in the word at all, set it to PRESENT
     //else set it to absent
     //Then we update the feedback and save it to the feedbacklist for progess later on
-    Feedback makeAGuess(String guessedWord) {
+    public Feedback makeAGuess(String guessedWord) {
         List<Mark> marks = new ArrayList<>();
-
-        for (int i = 0; i < wordToGuess.length(); i++) {
-            if (String.valueOf(guessedWord.charAt(i)).equals(String.valueOf(wordToGuess.charAt(i)))) {
-                marks.add(Mark.CORRECT);
-            } else if (wordToGuess.contains(String.valueOf(guessedWord.charAt(i)))) {
-                marks.add(Mark.PRESENT);
-            } else {
-                marks.add(Mark.ABSENT);
+        if(turn < 5) {
+            for (int i = 0; i < wordToGuess.length(); i++) {
+                if (String.valueOf(guessedWord.charAt(i)).equals(String.valueOf(wordToGuess.charAt(i)))) {
+                    marks.add(Mark.CORRECT);
+                } else if (wordToGuess.contains(String.valueOf(guessedWord.charAt(i)))) {
+                    marks.add(Mark.PRESENT);
+                } else {
+                    marks.add(Mark.ABSENT);
+                }
             }
+            turn++;
+            Feedback feedback = new Feedback(guessedWord, marks);
+            feedbackList.add(feedback);
+            return feedback;
+        } else {
+            throw new TurnExeption();
         }
-        turn++;
-        Feedback feedback = new Feedback(guessedWord,marks);
-        feedbackList.add(feedback);
-        return feedback;
-    }
 
+    }
+    public boolean gameIsLost(){
+        List<Mark> lastMarks = getLastFeedbackFromRound().getMarks();
+        return lastMarks.contains(Mark.ABSENT) || (lastMarks.contains(Mark.PRESENT));
+    }
 
     public Feedback getLastFeedbackFromRound(){
         return feedbackList.get(feedbackList.size() - 1);

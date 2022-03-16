@@ -3,6 +3,7 @@ package nl.hu.cisq1.lingo.trainer.application;
 import nl.hu.cisq1.lingo.trainer.data.GameRepository;
 import nl.hu.cisq1.lingo.trainer.domain.Game;
 import nl.hu.cisq1.lingo.trainer.domain.GameProgress;
+import nl.hu.cisq1.lingo.trainer.domain.GameStatus;
 import nl.hu.cisq1.lingo.trainer.domain.exception.GameNotFoundException;
 import nl.hu.cisq1.lingo.words.application.WordService;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,14 @@ public class TrainerService {
         int currentWordLength = game.getCurrentWordLength();
         String newWordToGuess = this.wordService.provideRandomWord(currentWordLength + 1);
         game.startNewRound(newWordToGuess);
+        this.gameRepository.save(game);
+        return game.getCurrentGameProgress();
+    }
+
+    public GameProgress makeGuess(String attempt, Long gameId){
+        Game game = getGameById(gameId);
+        game.makeGuess(attempt);
+
         this.gameRepository.save(game);
         return game.getCurrentGameProgress();
     }

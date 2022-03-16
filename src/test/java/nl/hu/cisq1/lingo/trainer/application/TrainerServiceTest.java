@@ -3,6 +3,8 @@ package nl.hu.cisq1.lingo.trainer.application;
 import nl.hu.cisq1.lingo.trainer.data.GameRepository;
 import nl.hu.cisq1.lingo.trainer.domain.*;
 import nl.hu.cisq1.lingo.trainer.domain.exception.CannotStartNewRoundException;
+import nl.hu.cisq1.lingo.trainer.domain.exception.GameNotFoundException;
+import nl.hu.cisq1.lingo.trainer.domain.exception.TurnExeption;
 import nl.hu.cisq1.lingo.words.application.WordService;
 import nl.hu.cisq1.lingo.words.domain.Word;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,10 +81,115 @@ class TrainerServiceTest {
         GameProgress gameProgress = trainerService.startNewRound((long)6);
         game.setGameStatus(GameStatus.LOST);
 
-        verify(gameRepository).save(any(Game.class));
+        verify(gameRepository,times(1)).save(any(Game.class));
         assertThrows(
                 CannotStartNewRoundException.class,
                 () -> trainerService.startNewRound(6L)
+        );
+    }
+    @Test
+    @DisplayName("Start first round, correct")
+    void startNewRound(){
+        WordService wordService = mock(WordService.class);
+        when(wordService.provideRandomWord(anyInt())).thenReturn("woord");
+
+        Game game = new Game();
+        game.setId((long)6);
+        Round round = new Round(wordService.provideRandomWord(5));
+
+
+
+        game.setGameStatus(GameStatus.ACTIVE);
+
+        game.getRounds().add(round);
+
+        GameRepository gameRepository = mock(GameRepository.class);
+
+        when(gameRepository.save(any())).thenReturn(game);
+        when(gameRepository.findById(anyLong())).thenReturn(Optional.of(game));
+
+        TrainerService trainerService = new TrainerService(gameRepository, wordService);
+
+        GameProgress gameProgress = trainerService.startNewRound((long)6);
+
+        game.makeGuess("woord");
+
+        verify(gameRepository, times(1)).findById(6L);
+        verify(wordService, times(1)).provideRandomWord(5);
+        verify(gameRepository,times(1)).save(any(Game.class));
+        assertEquals(Arrays.asList("w",".",".",".","."),gameProgress.getHint());
+
+
+    }
+
+    @Test
+    @DisplayName("Lose game after 5th failed guess")
+    void LostAfterfifthfail(){
+        WordService wordService = mock(WordService.class);
+        when(wordService.provideRandomWord(anyInt())).thenReturn("woord");
+
+        Game game = new Game();
+        game.setId((long)6);
+
+        Round round = new Round(wordService.provideRandomWord(5));
+        round.setTurn(4);
+        game.getRounds().add(round);
+        game.setGameStatus(GameStatus.ACTIVE);
+
+        GameRepository gameRepository = mock(GameRepository.class);
+        when(gameRepository.save(any())).thenReturn(game);
+        when(gameRepository.findById(anyLong())).thenReturn(Optional.of(game));
+
+        TrainerService trainerService = new TrainerService(gameRepository, wordService);
+
+        GameProgress gameProgress =  trainerService.makeGuess("pizza", (long)6);
+
+        assertEquals(GameStatus.LOST, gameProgress.getGameStatus());
+    }
+    @Test
+    @DisplayName("Make a sixt attempt to guess")
+    void makeAGuessAfterfiveAttempts(){
+        WordService wordService = mock(WordService.class);
+        when(wordService.provideRandomWord(anyInt())).thenReturn("woord");
+
+        Game game = new Game();
+        game.setId((long)6);
+
+        Round round = new Round(wordService.provideRandomWord(5));
+        round.setTurn(5);
+        game.getRounds().add(round);
+        game.setGameStatus(GameStatus.ACTIVE);
+
+        GameRepository gameRepository = mock(GameRepository.class);
+        when(gameRepository.save(any())).thenReturn(game);
+        when(gameRepository.findById(anyLong())).thenReturn(Optional.of(game));
+
+        TrainerService trainerService = new TrainerService(gameRepository, wordService);
+
+        //GameProgress gameProgress =  trainerService.makeGuess("pizza", (long)6);
+
+        assertThrows(
+                TurnExeption.class,
+                () -> trainerService.makeGuess("pizza", (long)6)
+        );
+    }
+    @Test
+    @DisplayName("Game Id does not exist, failed")
+    void getGameIdThatDoesNotExist(){
+        WordService wordService = mock(WordService.class);
+        when(wordService.provideRandomWord(anyInt())).thenReturn("woord");
+
+        Game game = new Game();
+        game.setId((long)6);
+
+        GameRepository gameRepository = mock(GameRepository.class);
+        when(gameRepository.save(any())).thenReturn(game);
+
+        TrainerService trainerService = new TrainerService(gameRepository, wordService);
+
+        assertThrows(
+                GameNotFoundException.class,
+                () -> trainerService.startNewRound((long)2)
         );
     }
 }

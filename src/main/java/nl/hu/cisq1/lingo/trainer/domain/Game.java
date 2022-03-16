@@ -45,6 +45,14 @@ public class Game extends AbstractEntity {
             throw new CannotStartNewRoundException(gameStatus);
         }
     }
+    public void makeGuess(String attempt){
+        this.getCurrentRound().makeAGuess(attempt);
+        if(getCurrentRound().getLastFeedbackFromRound().isWordGuessed()){
+            this.setScore(score + 10);
+        } else if (getCurrentRound().gameIsLost()){
+            this.setGameStatus(GameStatus.LOST);
+        }
+    }
 
 
     public int getCurrentWordLength(){
