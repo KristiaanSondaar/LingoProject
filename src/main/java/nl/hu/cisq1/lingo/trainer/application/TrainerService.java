@@ -34,7 +34,7 @@ public class TrainerService {
         this.gameRepository.save(game);
         return game.getCurrentGameProgress();
     }
-
+    //Test
     public GameProgress makeGuess(String attempt, Long gameId){
         Game game = getGameById(gameId);
         game.makeGuess(attempt);
