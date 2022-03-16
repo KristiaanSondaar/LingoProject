@@ -57,4 +57,6 @@ class FeedbackTest {
                 Arguments.of(List.of(Mark.CORRECT,Mark.ABSENT,Mark.ABSENT,Mark.ABSENT,Mark.ABSENT),Arrays.asList("w",".",".","r","d"), "woord", Arrays.asList("w",".",".","r","d"))
         );
     }
+
+
 }

@@ -1,15 +1,32 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Feedback {
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+public class Feedback extends AbstractEntity{
     private String attempt;
-    List<Mark> marks;
-    List<String> hint;
+
+    @ElementCollection
+    private List<Mark> marks;
+    @ElementCollection
+    private List<String> hint;
 
     public Feedback(String attempt, List<Mark> mark) {
         this.attempt = attempt;
@@ -39,6 +56,8 @@ public class Feedback {
         }
         return newHint;
     }
+
+
 
     @Override
     public boolean equals(Object o) {

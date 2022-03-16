@@ -2,7 +2,9 @@ package nl.hu.cisq1.lingo.trainer.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,5 +24,14 @@ class RoundTest {
         Feedback feedback = new Feedback("woord", List.of(Mark.ABSENT,Mark.ABSENT,Mark.ABSENT,Mark.CORRECT,Mark.CORRECT));
         Round round = new Round(1,"paard");
         assertEquals(round.makeAGuess("woord"), feedback);
+    }
+
+    @Test
+    @DisplayName("Gives the first hint based on word")
+    void firstHintIsCorrect(){
+        Round round = new Round();
+        round.makeFirstHint("woord");
+        //Test to see if it works with 6 or 7 letter words aswell
+        assertEquals(Arrays.asList("w",".",".",".","."),round.getFirstHint());
     }
 }

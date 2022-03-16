@@ -1,17 +1,51 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class Round {
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+public class Round extends AbstractEntity {
     //5 turns total
     private int turn;
     private String wordToGuess;
+    @ElementCollection
+    private List<String> firstHint;
+    @OneToMany
     private List<Feedback> feedbackList = new ArrayList<>();
 
+    public Round(String wordToGuess){
+        this.wordToGuess = wordToGuess;
+        makeFirstHint(wordToGuess);
+    }
+
     public Round(int turn, String wordToGuess) {
+        super();
         this.turn = turn;
         this.wordToGuess = wordToGuess;
+    }
+
+    public void makeFirstHint(String wordToGuess){
+        List<String> firstHint = Arrays.asList(wordToGuess.split(""));
+        for (int i = 0; i < wordToGuess.length(); i++) {
+                if(i!=0){
+                    firstHint.set(i, ".");
+                }
+            }
+        this.firstHint = firstHint;
     }
 
     //Making a guess
@@ -37,5 +71,10 @@ public class Round {
         Feedback feedback = new Feedback(guessedWord,marks);
         feedbackList.add(feedback);
         return feedback;
+    }
+
+
+    public Feedback getLastFeedbackFromRound(){
+        return feedbackList.get(feedbackList.size() - 1);
     }
 }
