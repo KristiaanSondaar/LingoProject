@@ -5,8 +5,11 @@ import nl.hu.cisq1.lingo.trainer.domain.Game;
 import nl.hu.cisq1.lingo.trainer.domain.GameProgress;
 import nl.hu.cisq1.lingo.trainer.domain.GameStatus;
 import nl.hu.cisq1.lingo.trainer.domain.exception.GameNotFoundException;
+import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidWordExeption;
 import nl.hu.cisq1.lingo.words.application.WordService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 
@@ -39,11 +42,14 @@ public class TrainerService {
     }
     //Test
     public GameProgress makeGuess(String attempt, Long gameId){
-        Game game = getGameById(gameId);
-        game.makeGuess(attempt);
-
-        this.gameRepository.save(game);
-        return game.getCurrentGameProgress();
+        if(wordService.wordExists(attempt)) {
+            Game game = getGameById(gameId);
+            game.makeGuess(attempt);
+            this.gameRepository.save(game);
+            return game.getCurrentGameProgress();
+        } else {
+            throw new InvalidWordExeption(attempt);
+        }
     }
 
     private Game getGameById(Long gameId) throws GameNotFoundException{

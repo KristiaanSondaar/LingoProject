@@ -56,40 +56,4 @@ public class Feedback extends AbstractEntity{
         }
         return newHint;
     }
-
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Feedback feedback = (Feedback) o;
-        return Objects.equals(attempt, feedback.attempt) && Objects.equals(marks, feedback.marks);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(attempt, marks);
-    }
-
-    @Override
-    public String toString() {
-        return "Feedback{" +
-                "attempt='" + attempt + '\'' +
-                ", mark=" + marks +
-                '}';
-    }
-
-    //https://stackoverflow.com/questions/1795402/check-if-a-string-contains-a-special-character
-    /*public boolean isWordValid(){
-        Pattern pattern = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(attempt);
-        boolean bool = matcher.find();
-        if(bool){
-            return false;
-        } else{
-            return true;
-        }
-
-    }*/
 }

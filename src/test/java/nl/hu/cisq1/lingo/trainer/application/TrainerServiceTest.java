@@ -4,6 +4,7 @@ import nl.hu.cisq1.lingo.trainer.data.GameRepository;
 import nl.hu.cisq1.lingo.trainer.domain.*;
 import nl.hu.cisq1.lingo.trainer.domain.exception.CannotStartNewRoundException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.GameNotFoundException;
+import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidWordExeption;
 import nl.hu.cisq1.lingo.trainer.domain.exception.TurnExeption;
 import nl.hu.cisq1.lingo.words.application.WordService;
 import nl.hu.cisq1.lingo.words.domain.Word;
@@ -127,6 +128,7 @@ class TrainerServiceTest {
     void LostAfterfifthfail(){
         WordService wordService = mock(WordService.class);
         when(wordService.provideRandomWord(anyInt())).thenReturn("woord");
+        when(wordService.wordExists("beard")).thenReturn(true);
 
         Game game = new Game();
         game.setId((long)6);
@@ -141,8 +143,8 @@ class TrainerServiceTest {
         when(gameRepository.findById(anyLong())).thenReturn(Optional.of(game));
 
         TrainerService trainerService = new TrainerService(gameRepository, wordService);
-
-        GameProgress gameProgress =  trainerService.makeGuess("pizza", (long)6);
+        trainerService.startNewGame();
+        GameProgress gameProgress =  trainerService.makeGuess("beard", (long)6);
 
         assertEquals(GameStatus.LOST, gameProgress.getGameStatus());
     }
@@ -151,6 +153,7 @@ class TrainerServiceTest {
     void makeAGuessAfterfiveAttempts(){
         WordService wordService = mock(WordService.class);
         when(wordService.provideRandomWord(anyInt())).thenReturn("woord");
+        when(wordService.wordExists("beard")).thenReturn(true);
 
         Game game = new Game();
         game.setId((long)6);
@@ -164,13 +167,14 @@ class TrainerServiceTest {
         when(gameRepository.save(any())).thenReturn(game);
         when(gameRepository.findById(anyLong())).thenReturn(Optional.of(game));
 
+
         TrainerService trainerService = new TrainerService(gameRepository, wordService);
 
         //GameProgress gameProgress =  trainerService.makeGuess("pizza", (long)6);
 
         assertThrows(
                 TurnExeption.class,
-                () -> trainerService.makeGuess("pizza", (long)6)
+                () -> trainerService.makeGuess("beard", (long)6)
         );
     }
     @Test
@@ -191,5 +195,22 @@ class TrainerServiceTest {
                 GameNotFoundException.class,
                 () -> trainerService.startNewRound((long)2)
         );
+    }
+
+    @Test
+    @DisplayName("Make a guess with a word that does not exist")
+    void makeGuessWithNonExistingWord(){
+        WordService wordService = mock(WordService.class);
+        when(wordService.provideRandomWord(anyInt())).thenReturn("woord");
+
+        Game game = new Game();
+        game.setId((long)6);
+        GameRepository gameRepository = mock(GameRepository.class);
+        when(gameRepository.save(any())).thenReturn(game);
+
+        TrainerService trainerService = new TrainerService(gameRepository, wordService);
+
+        assertThrows(InvalidWordExeption.class,
+                () -> trainerService.makeGuess("fdnjsf", 6L));
     }
 }

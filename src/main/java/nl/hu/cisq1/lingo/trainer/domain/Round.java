@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidWordExeption;
 import nl.hu.cisq1.lingo.trainer.domain.exception.TurnExeption;
 
 import javax.persistence.ElementCollection;
@@ -12,6 +13,8 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Getter
@@ -33,12 +36,6 @@ public class Round extends AbstractEntity {
         makeFirstHint(wordToGuess);
     }
 
-    public Round(int turn, String wordToGuess) {
-        super();
-        this.turn = turn;
-        this.wordToGuess = wordToGuess;
-    }
-
     public void makeFirstHint(String wordToGuess){
         List<String> firstHint = Arrays.asList(wordToGuess.split(""));
         for (int i = 0; i < wordToGuess.length(); i++) {
@@ -56,30 +53,30 @@ public class Round extends AbstractEntity {
     //if the letter is not in the same place, check if its in the word at all, set it to PRESENT
     //else set it to absent
     //Then we update the feedback and save it to the feedbacklist for progess later on
-    public Feedback makeAGuess(String guessedWord) {
-        List<Mark> marks = new ArrayList<>();
-        if(turn < 5) {
-            for (int i = 0; i < wordToGuess.length(); i++) {
-                if (String.valueOf(guessedWord.charAt(i)).equals(String.valueOf(wordToGuess.charAt(i)))) {
-                    marks.add(Mark.CORRECT);
-                } else if (wordToGuess.contains(String.valueOf(guessedWord.charAt(i)))) {
-                    marks.add(Mark.PRESENT);
-                } else {
-                    marks.add(Mark.ABSENT);
+    public void makeAGuess(String guessedWord) {
+            List<Mark> marks = new ArrayList<>();
+         if (turn < 5) {
+                for (int i = 0; i < wordToGuess.length(); i++) {
+                    if (String.valueOf(guessedWord.charAt(i)).equals(String.valueOf(wordToGuess.charAt(i)))) {
+                        marks.add(Mark.CORRECT);
+                    } else if (wordToGuess.contains(String.valueOf(guessedWord.charAt(i)))) {
+                        marks.add(Mark.PRESENT);
+                    } else {
+                        marks.add(Mark.ABSENT);
+                    }
                 }
-            }
-            turn++;
-            Feedback feedback = new Feedback(guessedWord, marks);
-            feedbackList.add(feedback);
-            return feedback;
-        } else {
-            throw new TurnExeption();
-        }
+                turn++;
 
+                Feedback feedback = new Feedback(guessedWord, marks);
+                feedback.setHint(feedback.giveHint(firstHint,wordToGuess));
+                feedbackList.add(feedback);
+            } else {
+                throw new TurnExeption();
+            }
     }
     public boolean gameIsLost(){
         List<Mark> lastMarks = getLastFeedbackFromRound().getMarks();
-        return lastMarks.contains(Mark.ABSENT) || (lastMarks.contains(Mark.PRESENT));
+        return this.turn == 5 && lastMarks.contains(Mark.ABSENT) || (lastMarks.contains(Mark.PRESENT));
     }
 
     public Feedback getLastFeedbackFromRound(){
