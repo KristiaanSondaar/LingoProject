@@ -1,3 +1,6 @@
+[![Java CI](https://github.com/KristiaanSondaar/LingoProject/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/KristiaanSondaar/LingoProject/actions/workflows/build.yml)
+
+
 # CISQ1: Lingo Trainer
 
 This project is part of a sophomore Software Development 
