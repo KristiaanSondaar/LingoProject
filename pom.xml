@@ -18,7 +18,7 @@
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.projectKey>kristiaansondaar</sonar.projectKey>
-        <sonar.organization>KristiaanSondaar</sonar.organization>
+        <sonar.organization>kristiaansondaar</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.exclusions>**/LingoApplication.java</sonar.exclusions>
     </properties>
