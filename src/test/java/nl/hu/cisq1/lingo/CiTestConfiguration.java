@@ -1,12 +1,12 @@
 package nl.hu.cisq1.lingo;
 
+import nl.hu.cisq1.lingo.trainer.data.GameRepository;
 import nl.hu.cisq1.lingo.words.WordTestDataFixtures;
 import nl.hu.cisq1.lingo.words.data.WordRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
-import org.springframework.test.context.ActiveProfiles;
 
 @Profile("ci")
 @TestConfiguration

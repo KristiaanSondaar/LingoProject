@@ -30,10 +30,10 @@ public class Game extends AbstractEntity {
 
 
     public GameProgress getCurrentGameProgressById(Long gameId){
-        return new GameProgress(this.score, getCurrentRound().getFirstHint(), gameStatus, getCurrentRound().getFeedbackList());
+        return new GameProgress(this.getId(),this.score, getCurrentRound().getFirstHint(), gameStatus, getCurrentRound().getFeedbackList());
     }
     public GameProgress getCurrentGameProgress(){
-        return new GameProgress(this.score, getCurrentRound().getFirstHint(), gameStatus, getCurrentRound().getFeedbackList());
+        return new GameProgress(this.getId(),this.score, getCurrentRound().getFirstHint(), gameStatus, getCurrentRound().getFeedbackList());
     }
     public void startNewGame(String wordToGuess){
         setGameStatus(GameStatus.ACTIVE);

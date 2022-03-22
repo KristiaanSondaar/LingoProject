@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class GameProgress extends AbstractEntity {
+    private Long gameId;
     private int score;
     @ElementCollection
     private List<String> hint;
