@@ -1,3 +1,12 @@
+[![Java CI](https://github.com/KristiaanSondaar/LingoProject/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/KristiaanSondaar/LingoProject/actions/workflows/build.yml)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=KristiaanSondaar_LingoProject&metric=coverage)](https://sonarcloud.io/summary/new_code?id=KristiaanSondaar_LingoProject)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=KristiaanSondaar_LingoProject&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=KristiaanSondaar_LingoProject)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=KristiaanSondaar_LingoProject&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=KristiaanSondaar_LingoProject)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=KristiaanSondaar_LingoProject&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=KristiaanSondaar_LingoProject)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=KristiaanSondaar_LingoProject&metric=bugs)](https://sonarcloud.io/summary/new_code?id=KristiaanSondaar_LingoProject)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=KristiaanSondaar_LingoProject&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=KristiaanSondaar_LingoProject)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=KristiaanSondaar_LingoProject&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=KristiaanSondaar_LingoProject)
+
 # CISQ1: Lingo Trainer
 
 This project is part of a sophomore Software Development 
