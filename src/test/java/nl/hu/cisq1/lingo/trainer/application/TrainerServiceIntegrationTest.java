@@ -18,18 +18,24 @@ import static org.mockito.Mockito.when;
 public class TrainerServiceIntegrationTest {
 
     @Autowired
-    private TrainerService trainerService;
-    @Autowired
-    private GameRepository gameRepository;
+    TrainerService trainerService;
 
+
+    @Test
+    @DisplayName("Starting the game, succes")
+    void startGame(){
+        GameProgress newGame = trainerService.startNewGame();
+
+        assertEquals(0, newGame.getScore());
+        assertEquals(GameStatus.ACTIVE,newGame.getGameStatus());
+    }
 
     @Test
     @DisplayName("Test if you can guess")
     void guess(){
-        GameProgress newGame = trainerService.startNewGame();
-        GameProgress gameProgress = trainerService.makeGuess("woord", newGame.getId());
+        GameProgress gameProgress = trainerService.makeGuess("pizza", 6L);
 
-        assertEquals(0, gameProgress.getScore());
+        assertTrue(gameProgress.getScore() > 0);
         assertEquals(GameStatus.ACTIVE,gameProgress.getGameStatus());
     }
 }

@@ -16,8 +16,8 @@ import javax.transaction.Transactional;
 @Transactional
 @Service
 public class TrainerService {
-    private GameRepository gameRepository;
-    private WordService wordService;
+    private final GameRepository gameRepository;
+    private final WordService wordService;
 
     public TrainerService(GameRepository gameRepository, WordService wordService) {
         this.gameRepository = gameRepository;

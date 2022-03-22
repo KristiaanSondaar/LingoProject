@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidWordExeption;
 import nl.hu.cisq1.lingo.trainer.domain.exception.TurnExeption;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -28,7 +30,9 @@ public class Round extends AbstractEntity {
     private String wordToGuess;
     @ElementCollection
     private List<String> firstHint;
+
     @OneToMany
+    @Cascade(CascadeType.ALL)
     private List<Feedback> feedbackList = new ArrayList<>();
 
     public Round(String wordToGuess){

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nl.hu.cisq1.lingo.trainer.domain.exception.CannotStartNewRoundException;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -21,7 +23,9 @@ import java.util.List;
 public class Game extends AbstractEntity {
     private GameStatus gameStatus;
     private int score;
+
     @OneToMany
+    @Cascade(CascadeType.ALL)
     private List<Round> rounds = new ArrayList<>();
 
 
