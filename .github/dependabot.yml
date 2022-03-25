@@ -4,6 +4,6 @@ updates:
   - package-ecosystem: "maven"
     # Look for maven in the `root` directory
     directory: "/"
-    # Check for updates once daily
+    # Check for updates once weekly
     schedule:
       interval: "weekly"
