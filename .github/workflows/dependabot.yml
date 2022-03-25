@@ -1,0 +1,9 @@
+version: 2
+updates:
+  # Enable version updates for maven
+  - package-ecosystem: "maven"
+    # Look for maven in the `root` directory
+    directory: "/"
+    # Check for updates once daily
+    schedule:
+      interval: "weekly"
